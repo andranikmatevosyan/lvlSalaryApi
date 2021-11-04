@@ -7,9 +7,8 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-<p align="center">
-Postman Documentation can be accessed via <a target="_blank" href="https://documenter.getpostman.com/view/5526818/UVC2G8o9">this link</a>
-</p>
+## Documentation
+Postman Documentation can be accessed via [this link](https://documenter.getpostman.com/view/5526818/UVC2G8o9)
 
 ## License
 
