@@ -11,6 +11,10 @@ class SalaryService implements MainInterface, SalaryInterface
     private $taxService;
     private $currency;
 
+    /**
+     * @param $request
+     * @param null $currency
+     */
     public function init($request, $currency = null)
     {
         $this->setRequest($request);

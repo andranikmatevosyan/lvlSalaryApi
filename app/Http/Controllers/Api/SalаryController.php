@@ -71,15 +71,16 @@ class SalаryController extends BaseController
             $is_retiree = $request->get('is_retiree');
             $is_handicapped = $request->get('is_handicapped');
             $handicapped_group = $request->get('handicapped_group');
-            $worker_status_data = compact('worker_id', 'year', 'month', 'is_retiree', 'is_handicapped', 'handicapped_group');
+            $worker_status_insert = compact('worker_id', 'year', 'month', 'is_retiree', 'is_handicapped', 'handicapped_group');
+            $worker_status_update = compact('is_retiree', 'is_handicapped', 'handicapped_group');
 
             if (!$worker_status_query->exists()):
-                WorkerStatus::query()->create($worker_status_data);
+                WorkerStatus::query()->create($worker_status_insert);
             else:
                 if ($request->get('update_if_exists') === 'yes'):
                     WorkerStatus::query()->where([
                         'id' => $worker_id
-                    ])->update($worker_status_data);
+                    ])->update($worker_status_update);
                 endif;
             endif;
 
@@ -104,31 +105,16 @@ class SalаryController extends BaseController
             $insurance_osms = $salary_data['insurance_osms'];
             $insurance_vosms = $salary_data['insurance_vosms'];
             $currency = $salary_data['currency'];
-            $salary_data = compact(
-                'worker_id',
-                'year',
-                'month',
-                'month_days_norm',
-                'month_days_work',
-                'has_mzp',
-                'salary',
-                'norm_salary',
-                'net_salary',
-                'tax_ipn',
-                'tax_opv',
-                'tax_so',
-                'insurance_osms',
-                'insurance_vosms',
-                'currency'
-            );
+            $salary_insert = compact('worker_id','year', 'month', 'month_days_norm', 'month_days_work', 'has_mzp', 'salary', 'norm_salary', 'net_salary', 'tax_ipn', 'tax_opv', 'tax_so', 'insurance_osms', 'insurance_vosms', 'currency');
+            $salary_update = compact('month_days_norm', 'month_days_work', 'has_mzp', 'salary', 'norm_salary', 'net_salary', 'tax_ipn', 'tax_opv', 'tax_so', 'insurance_osms', 'insurance_vosms', 'currency');
 
             if (!$salary_query->exists()):
-                Salary::query()->create($salary_data);
+                Salary::query()->create($salary_insert);
             else:
                 if ($request->get('update_if_exists') === 'yes'):
                     Salary::query()->where([
                         'id' => $worker_id
-                    ])->update($salary_data);
+                    ])->update($salary_update);
                 endif;
             endif;
 
