@@ -50,6 +50,6 @@ class SaveRequest extends FormRequest
      */
     public function failedValidation(Validator $validator): JsonResponse
     {
-        throw new HttpResponseException($this->sendError($validator->errors()));
+        throw new HttpResponseException($this->response422($validator->errors()));
     }
 }

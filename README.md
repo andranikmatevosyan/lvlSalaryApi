@@ -7,6 +7,9 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Description
+This app calculates and saves salary and taxes for mentioned person and for mentioned time and parameters.
+
 ## Documentation
 Postman Documentation can be accessed via [this link](https://documenter.getpostman.com/view/5526818/UVC2G8o9)
 

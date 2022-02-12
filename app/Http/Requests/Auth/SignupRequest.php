@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Salary;
+namespace App\Http\Requests\Auth;
 
 use App\traits\ApiResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CalculateRequest extends FormRequest
+class SignupRequest extends FormRequest
 {
     use ApiResponse;
 
@@ -29,15 +29,10 @@ class CalculateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'salary' => 'required|numeric|min:0',
-            'month_days_norm' => 'required|integer|max:31',
-            'month_days_work' => 'required|integer|max:31',
-            'has_mzp' => 'required|in:yes,no',
-            'year' => 'required|integer|max:2022',
-            'month' => 'required|integer|max:12',
-            'is_retiree' => 'required|in:yes,no',
-            'is_handicapped' => 'required|in:yes,no',
-            'handicapped_group' => 'nullable|required_if:is_handicapped,==,yes|integer|in:1,2,3'
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'confirm_password' => 'required|string|same:password'
         ];
     }
 

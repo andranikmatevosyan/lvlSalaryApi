@@ -9,44 +9,64 @@ use Illuminate\Http\Response;
 trait ApiResponse
 {
     /**
-     * success response method.
-     *
-     * @param $result
-     * @param $message
-     * @param int $code
+     * @param $data
      * @return JsonResponse
      */
-    public function sendResponse($message, $result, int $code = Response::HTTP_NOT_FOUND): JsonResponse
+    public function response200($data): JsonResponse
     {
-        $response = [
-            'success' => true,
-            'message' => $message,
-            'data'    => $result
-        ];
-
-        return response()->json($response, $code);
+        return response()->json(compact('data'), Response::HTTP_OK);
     }
 
-
     /**
-     * return error response.
-     *
-     * @param $error
-     * @param $errorMessages
-     * @param int $code
+     * @param $data
      * @return JsonResponse
      */
-    public function sendError($error, $errorMessages = [], int $code = Response::HTTP_NOT_FOUND): JsonResponse
+    public function response201($data): JsonResponse
     {
-        $response = [
-            'success' => false,
-            'message' => $error,
-        ];
+        return response()->json(compact('data'), Response::HTTP_CREATED);
+    }
 
-        if(!empty($errorMessages)){
-            $response['data'] = $errorMessages;
-        }
+    /**
+     * @param $data
+     * @return JsonResponse
+     */
+    public function response202($data): JsonResponse
+    {
+        return response()->json(compact('data'), Response::HTTP_ACCEPTED);
+    }
 
-        return response()->json($response, $code);
+    /**
+     * @return JsonResponse
+     */
+    public function response204(): JsonResponse
+    {
+        return response()->json([], Response::HTTP_ACCEPTED);
+    }
+
+    /**
+     * @param $message
+     * @return JsonResponse
+     */
+    public function response401($message): JsonResponse
+    {
+        return response()->json(compact('message'), Response::HTTP_UNAUTHORIZED);
+    }
+
+    /**
+     * @param $errors
+     * @return JsonResponse
+     */
+    public function response422($errors): JsonResponse
+    {
+        return response()->json(compact('errors'), Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * @param $errors
+     * @return JsonResponse
+     */
+    public function response500($errors): JsonResponse
+    {
+        return response()->json(compact('errors'), Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

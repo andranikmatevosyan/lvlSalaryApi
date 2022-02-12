@@ -3,6 +3,9 @@
 namespace App\Services\Salary;
 
 
+use App\Services\Salary\Interfaces\MainInterface;
+use App\Services\Salary\Interfaces\TaxInterface;
+
 class TaxService implements MainInterface, TaxInterface
 {
     private $request = [];

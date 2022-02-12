@@ -2,54 +2,58 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Auth\AuthAction;
+use App\Components\Auth\AuthSigninDto;
+use App\Components\Auth\AuthSignupDto;
+use App\Http\Requests\Auth\SigninRequest;
+use App\Http\Requests\Auth\SignupRequest;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends BaseController
 {
     /**
-     * @param Request $request
+     * @param SigninRequest $request
+     * @param AuthAction $authAction
      * @return JsonResponse
      */
-    public function signIn(Request $request): JsonResponse
+    public function signIn(SigninRequest $request, AuthAction $authAction): JsonResponse
     {
-        if (!Auth::attempt(['email' => $request->get('email'), 'password' => $request->get('password')])):
-            return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
-        endif;
+        try {
+            $response = $authAction->signInAction(new AuthSigninDto($request->toArray()));
 
-        $authUser = Auth::user();
-        $success['token'] = $authUser->createToken('MyAuthApp')->plainTextToken;
-        $success['name'] = $authUser->name;
+            if ($response['type'] === 'error'):
+                return $this->response401('Unauthorised.');
+            endif;
+        } catch (Exception $exception) {
+            return $this->response500([
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile()
+            ]);
+        }
 
-        return $this->sendResponse($success, 'User signed in');
+        return $this->response200($response);
     }
 
     /**
-     * @param Request $request
+     * @param SignupRequest $request
+     * @param AuthAction $authAction
      * @return JsonResponse
      */
-    public function signUp(Request $request): JsonResponse
+    public function signUp(SignupRequest $request, AuthAction $authAction): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required',
-            'confirm_password' => 'required|same:password',
-        ]);
+        try {
+            $request_array = $request->all();
+            $request_array['password'] = bcrypt($request_array['password']);
+            $response = $authAction->signUpAction(new AuthSignupDto($request_array));
+        } catch (Exception $exception) {
+            return $this->response500([
+                'message' => $exception->getMessage(),
+                'file' => $exception->getFile()
+            ]);
+        }
 
-        if ($validator->fails()):
-            return $this->sendError('Error validation', $validator->errors());
-        endif;
-
-        $input = $request->all();
-        $input['password'] = bcrypt($input['password']);
-        $user = User::query()->create($input);
-        $success['token'] = $user->createToken('MyAuthApp')->plainTextToken;
-        $success['name'] = $user->name;
-
-        return $this->sendResponse($success, 'User created successfully.');
+        return $this->response201($response);
     }
 }

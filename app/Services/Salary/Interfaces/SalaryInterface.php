@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Services\Salary;
+namespace App\Services\Salary\Interfaces;
 
 
 interface SalaryInterface
