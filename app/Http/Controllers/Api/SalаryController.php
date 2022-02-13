@@ -32,6 +32,7 @@ class SalаryController extends BaseController
      * @param SaveRequest $request
      * @param SalaryAction $salaryAction
      * @return JsonResponse
+     * @throws Exception
      */
     public function save(SaveRequest $request, SalaryAction $salaryAction): JsonResponse
     {
@@ -47,6 +48,8 @@ class SalаryController extends BaseController
             ]));
         } catch (Exception $exception) {
             DB::rollBack();
+
+            throw new Exception($exception);
         }
 
         DB::commit();
