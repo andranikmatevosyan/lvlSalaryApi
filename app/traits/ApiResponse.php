@@ -3,8 +3,10 @@
 namespace App\traits;
 
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Throwable;
 
 trait ApiResponse
 {
@@ -53,6 +55,15 @@ trait ApiResponse
     }
 
     /**
+     * @param $message
+     * @return JsonResponse
+     */
+    public function response404($message): JsonResponse
+    {
+        return response()->json(compact('message'), Response::HTTP_NOT_FOUND);
+    }
+
+    /**
      * @param $errors
      * @return JsonResponse
      */
@@ -68,5 +79,19 @@ trait ApiResponse
     public function response500($errors): JsonResponse
     {
         return response()->json(compact('errors'), Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param Throwable $exception
+     * @param int $code
+     * @return JsonResponse
+     */
+    public function responseException(Throwable $exception, int $code): JsonResponse
+    {
+        return response()->json([
+            'message' => $exception->getMessage(),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine()
+        ], $code);
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Resources\Salary\SalaryResource;
 use Illuminate\Http\JsonResponse;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Spatie\DataTransferObject\Exceptions\UnknownProperties;
 
 class SalаryController extends BaseController
 {
@@ -18,17 +19,11 @@ class SalаryController extends BaseController
      * @param CalculateRequest $request
      * @param SalaryAction $salaryAction
      * @return JsonResponse
+     * @throws UnknownProperties
      */
     public function calculate(CalculateRequest $request, SalaryAction $salaryAction): JsonResponse
     {
-        try {
-            $response = $salaryAction->calculateAction(new SalaryCalculateDto($request->toArray()));
-        } catch (Exception $exception) {
-            return $this->response500([
-                'message' => $exception->getMessage(),
-                'file' => $exception->getFile()
-            ]);
-        }
+        $response = $salaryAction->calculateAction(new SalaryCalculateDto($request->toArray()));
 
         return $this->response202($response);
     }
@@ -52,11 +47,6 @@ class SalаryController extends BaseController
             ]));
         } catch (Exception $exception) {
             DB::rollBack();
-
-            return $this->response500([
-                'message' => $exception->getMessage(),
-                'file' => $exception->getFile()
-            ]);
         }
 
         DB::commit();
