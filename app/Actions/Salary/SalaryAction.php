@@ -9,6 +9,7 @@ use App\Components\Salary\SalaryCreateDto;
 use App\Components\Salary\SalarySaveDto;
 use App\Components\Worker\WorkerCreateDto;
 use App\Components\WorkerStatus\WorkerStatusCreateDto;
+use App\Helpers\Constant;
 use App\Repositories\Salary\SalaryRepository;
 use App\Repositories\Worker\WorkerRepository;
 use App\Repositories\WorkerStatus\WorkerStatusRepository;
@@ -107,7 +108,7 @@ class SalaryAction
         if (!WorkerStatusRepository::getWorkerStatusByFieldsCheck($workerStatusCreateDto->worker_id, $workerStatusCreateDto->year, $workerStatusCreateDto->month)):
             WorkerStatusRepository::createWorkerStatus($workerStatusCreateDto);
         else:
-            if ($update_if_exists === 'yes'):
+            if ($update_if_exists === Constant::YES):
                 WorkerStatusRepository::updateWorkerStatusByFields($workerStatusCreateDto);
             endif;
         endif;
@@ -120,12 +121,12 @@ class SalaryAction
      * @param string $update_if_exists
      * @return Builder|Model|null
      */
-    public function upsertSalary(SalaryCreateDto $salaryCreateDto, string $update_if_exists = 'yes'): Model|Builder|null
+    public function upsertSalary(SalaryCreateDto $salaryCreateDto, string $update_if_exists = Constant::YES): Model|Builder|null
     {
         if (!SalaryRepository::getSalaryByFieldsCheck($salaryCreateDto->worker_id, $salaryCreateDto->year, $salaryCreateDto->month)):
             SalaryRepository::createSalary($salaryCreateDto);
         else:
-            if ($update_if_exists === 'yes'):
+            if ($update_if_exists === Constant::YES):
                 SalaryRepository::updateSalaryByFields($salaryCreateDto);
             endif;
         endif;

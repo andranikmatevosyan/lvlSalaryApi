@@ -3,6 +3,7 @@
 namespace App\Services\Salary;
 
 
+use App\Helpers\Constant;
 use App\Services\Salary\Interfaces\MainInterface;
 use App\Services\Salary\Interfaces\TaxInterface;
 
@@ -127,7 +128,7 @@ class TaxService implements MainInterface, TaxInterface
     {
         $response = 0;
 
-        if ($this->request['has_mzp'] === 'yes'):
+        if ($this->request['has_mzp'] === Constant::YES):
             $response = $this->salaryService->getMrpSalary();
         endif;
 
@@ -157,19 +158,19 @@ class TaxService implements MainInterface, TaxInterface
         $salary_mrp = $this->salaryService->getMrpSalary();
 
         switch (true):
-            case ($this->request['is_retiree'] === 'yes'):
+            case ($this->request['is_retiree'] === Constant::YES):
                 $has_ipn = true;
                 $has_opv = false;
                 $has_osms = false;
                 $has_vosms = false;
                 $has_so = false;
 
-                if ($this->request['is_handicapped'] === 'yes'):
+                if ($this->request['is_handicapped'] === Constant::YES):
                     $has_ipn = false;
                 endif;
 
                 break;
-            case ($this->request['is_handicapped'] === 'yes' && in_array($this->request['handicapped_group'], [1, 2, 3])):
+            case ($this->request['is_handicapped'] === Constant::YES && in_array($this->request['handicapped_group'], [1, 2, 3])):
                 $has_ipn = false;
                 $has_opv = false;
                 $has_osms = false;
@@ -189,7 +190,7 @@ class TaxService implements MainInterface, TaxInterface
                     $has_ipn = true;
                 endif;
 
-                if ($this->request['is_retiree'] === 'yes'):
+                if ($this->request['is_retiree'] === Constant::YES):
                     $has_ipn = false;
                     $has_opv = false;
                     $has_osms = false;
